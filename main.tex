@@ -1,0 +1,115 @@
+\documentclass[10pt]{article}
+\usepackage{femj_ru}
+
+%% Перед отправкой в журнал:
+% 1. Перевести файл в кодировку windows-1251
+% 2. в файле femj_ru.sty поменять \RequirePackage[utf8]{inputenc} на \RequirePackage[cp1251]{inputenc}
+% 3. в файле femj_ru.sty удалить строку 10 \RequirePackage{soulutf8}
+
+%Глубокоуважаемые авторы!
+
+% прежде чем подключать дополнительные пакеты TeXa и создавать новые окружения, пожалуйста, ознакомьтесь с уже предусмотренными в стилевом файле журнала
+
+% Используемые пакеты  перечислены в файле femj_ru.sty строки 7-30
+% Обозначения окружений журнала и дополнительные команды приведены в стилевом файле femj_ru.sty строки 38-80
+
+\begin{document}
+
+\Pages(0--0)
+
+\def\Im{\mathop{\mathrm{Im}}\nolimits}
+
+\summary Strongin~V.\,S.$^{1,2}$\!, Ovchinnikov~P.\,A.$^{1, 2}$\!, Lobanova~E.\,A.$^{1, 2}$\!, Cherkasov~M.\,D.$^{2}$\!, Trefilov~I.\,V.$^{1}$\!, Shevchenko~Y.\,A.$^{1, 2}$\author
+
+The paper Title\title
+
+In this paper we consider Something new and cool!
+\keywords{Metropolis algorithm, statistical thermodynamics.}
+\org{$^1$ Institute for Applied Mathematics, Far Eastern Branch, Russian Academy of Sciences\\ 
+$^2$ Department of theoretical physics, Far eastern federal university, Russia}
+\references{ %транслитерированный список литературы
+
+\begin{thebibliography}{4}
+\setlength{\parsep}{0pt}\setlength{\itemsep}{3pt}
+
+\bibitem{shevchenko2017}
+\by Y. Shevchenko, A. Makarov, K. Nefedev
+\jour Physics Letters A
+\paper Effect of long-and short-range interactions on the thermodynamics of dipolar spin ice
+\vol 381
+\issue 5
+\pages 428-434
+\yr 2017
+
+\end{thebibliography}
+}
+
+\UDC{511.21+517.965+517.547.582}
+\AMS{11B37 + 33E05}
+
+\SupportedBy{Исследование выполнено за счет гранта Российского научного фонда № 23-22-00328, \linebreak https://rscf.ru/project/23-22-00328/\linebreak 
+Представленные в работе результаты были получены на суперкомпьютерном вычислительном кластере Института прикладной математики ДВО РАН.
+}
+
+\submitted{16 сентября 2024 г.}
+
+\title{Название публикации в ДВМЖ}
+
+\author[1,2]{В.\,С.~Стронгин}{Институт прикладной математики, Дальневосточное отделение Российской академии наук. 690041, Россия, г. Владивосток, Ул. Радио д. 7}{}
+\author[1,2]{П.\,А.~Овчинников}{Департамент теоретической физики и интеллектуальных технологий, Институт наукоемких технологий и передовых материалов, Дальневосточный федеральный университет. 690922, Россия, г. Владивосток, о. Русский, п. Аякс, 10}{}
+\author[1,2]{Э.\,А.~Лобанова}{}{}
+\author[2]{М.\,Д.~Черкасов}{}{}
+\author[1]{И.\,В.~Трефилов}{}{}
+\author[1,2]{Ю.\,А.~Шевченко}{}{shevchenko.ya@dvfu.ru}
+
+
+
+
+\makeface
+
+%\markright {Разбавленная модель кубического спинового льда ...} %Добавляем, если длинное название статьи
+\markleft{В.\,С. Стронгин, П.\,А. Овчинников, Э.\,А.~Лобанова, ...} %добавляем, если много авторов
+
+
+\abstract Методом Метрополиса мы что то посчитали и получили каки-то новые результаты, которые будут интересны широкому кругу читателей.
+
+\keywords{алгоритм Метрополиса, статистическая термодинамика.}
+
+\DOI{to be presented}
+
+\section*{Введение}
+
+Искусственный спиновый лед это - 
+
+\section{Математическая модель} 
+
+Тут текст и ссылка \cite{shevchenko2017}
+
+\section {Теплоемкость кубического спинового льда}
+
+Ещё один раздел
+
+\section{Заключение}
+
+Заключение по публикации
+
+%\vspace{15mm}
+
+\begin{thebibliography}{20}
+\setlength{\parsep}{0pt}\setlength{\itemsep}{3pt}
+
+\bibitem{shevchenko2017}
+\by Y. Shevchenko, A. Makarov, K. Nefedev
+\jour Physics Letters A
+\paper Effect of long-and short-range interactions on the thermodynamics of dipolar spin ice
+\vol 381
+\issue 5
+\pages 428-434
+\yr 2017
+
+\end{thebibliography}
+
+
+
+\EndArticle
+\end{document} 
