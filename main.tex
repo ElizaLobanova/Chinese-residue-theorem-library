@@ -1,5 +1,7 @@
 \documentclass[10pt]{article}
 \usepackage{femj_ru}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 
 %% Перед отправкой в журнал:
 % 1. Перевести файл в кодировку windows-1251
@@ -31,6 +33,21 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 
 \begin{thebibliography}{4}
 \setlength{\parsep}{0pt}\setlength{\itemsep}{3pt}
+
+\bibitem{Okulov2011}
+\by С. М. Окулов, А. В. Лялин
+\jour Информатика и образование
+\paper Расширенный алгоритм Евклида
+\issue 5
+\pages 37-41
+\yr 2011
+
+\bibitem{Cormen2001}
+\by H. Cormen, E. Leiserson, L. Rivest, C. Stein
+\jour The MIT Press 
+\paper Introduction to Algorithms, Second Edition
+\pages 950-954
+\yr 2001
 
 \bibitem{shevchenko2017}
 \by Y. Shevchenko, A. Makarov, K. Nefedev
@@ -66,7 +83,7 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 \makeface
 
 %\markright {Разбавленная модель кубического спинового льда ...} %Добавляем, если длинное название статьи
-\markleft{В.\,С. Стронгин, П.\,А. Овчинников, Э.\,А.~Лобанова, ...} %добавляем, если много авторов
+\markleft{В.\, О.~Трухин, В.\, С. Стронгин, Э.\,А.~Лобанова, ...} %добавляем, если много авторов
 
 
 \abstract Задача ис
@@ -87,22 +104,71 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 
 \begin{enumerate}
 	\item Разбиение большого числа на составные части
-	\item Математические операции с массивами остатков от деления на простые числа
 	\item Расчёт результата из массива остатков от деления на простые числа
+	\item Математические операции с массивами остатков от деления на простые числа
 \end{enumerate}
 
-Основой алгоритма является Китайская теорема об остатках:
+Основой алгоритма является Китайская теорема об остатках \cite{Cormen2001}:
 
-Пусть $n = n_1 n_2 ... n_k$, где $n_i$ попарно взаимно простые натуральные числа
+Пусть $a = a_1 a_2 ... a_k$, где $a_i$ попарно взаимно простые натуральные числа, $r = r_1 r_2 ... r_k$ -- натуральные числа удовлетворяющие неравенству $0 \leq r_i \le a_i$. Тогда найдётся такое число
+$N$, для которого для всех $i$ выполняется:
+
+\begin{equation}
+	N \mod a_i = r_i
+	\label{eq:rem_th}
+\end{equation}
+
+Одно из следствий теоремы гласит что 
 
 \subsection{Разбиение большого числа на составные части}
 
+Из теоремы следует что, для того чтобы разложить число X на остатки $r_i$ необходимо найти остаток от деления на такой набор простых чисел $a_i$ чтобы:
 
+\begin{equation}
+	\prod\limits_{i=1}^k a_i \geqslant X
+	\label{eq:collary}
+\end{equation}
+ Таким образом чтобы сохранить скажем $2^{20}$ в виде остатков можно было бы взять 2 ближайших простое числа, однако задачей является сохранение в виде чисел размер которых оптимален для работы конкретной архитектуры процессоров, а значит будем брать ближайшие слева числа к $2^{32}$ или $2^{64}$ в количестве $k$ необходимом, для соблюдения условия \ref{eq:collary} 
 
-Чтобы разложить число X на остатки $r_i$ необходимо найти остаток от деления на такой набор простых чисел $a_i$ чтобы $\prod\limits_{i=1}^n a_i \geqslant X$
+\subsection{Расчёт результата из массива остатков от деления на простые числа}
+
+Для того чтобы расшифровать число обратно воспользуемся следующим алгоритмом:
+
+\begin{algorithm}[H]
+	\textbf{Ввод:} Массивы простых чисел $a[]$, и остатков $r[]$ длины $k$.\\
+	\textbf{Вывод:} Расшифрованное число.
+	\begin{algorithmic}
+		\STATE {Рассчитать $M = \prod\limits_{i=1}^k a_i$}
+		\STATE {Рассчитать $M_i = \frac{M}{a_i}$}
+		\STATE {Используя расширенный алгоритм Евклида \cite{Okulov2011} найти первый коэффициент Безу $s_i$ для наибольшего общего делителя от $M_i$ и $a_i$:}
+		\STATE{Рассчитать искомое число $x = \sum\limits_{i=1}^{k} r_i \cdot M_i \cdot s_i$}
+	\end{algorithmic}
+	\caption{Расшифровка числа из простых чисел и остатков от делений на них.}
+	\label{algo:crt_decription}
+\end{algorithm}
+
+Расширенный алгоритм Евклида \ref{algo:Evclid} \cite{Okulov2011} является продолжением общего алгоритма Евклида. В общем алгоритме рассчитываются частный и остатки такие что 
+
+\begin{algorithm}[H]
+	\textbf{Ввод:} Два натуральных числа $a$ и $b$.\\
+	\textbf{Вывод:} Первый коэффициент Безу.
+	\begin{algorithmic}
+		\STATE {Рассчитать $M = \prod\limits_{i=1}^k a_i$}
+		\STATE {Рассчитать $M_i = \frac{M}{a_i}$}
+		\WHILE {r > 0}
+			\STATE {}
+		\ENDWHILE {}
+		\STATE {Используя расширенный алгоритм Евклида \cite{Okulov2011} найти первый коэффициент Безу $s_i$ для наибольшего общего делителя от $M_i$ и $a_i$:}
+		\STATE{Рассчитать искомое число $x = \sum\limits_{i=1}^{k} r_i \cdot M_i \cdot s_i$}
+	\end{algorithmic}
+	\caption{Расширенный алгоритм Евклида}
+	\label{algo:Evclid}
+\end{algorithm}
+
 
 \subsection{Математические операции с массивами остатков от деления на простые числа}
-\subsection{Расчёт результата из массива остатков от деления на простые числа}
+
+Определим математические операции для 
 
 \section {Реализация в виде библиотеки c++}
 
@@ -119,6 +185,21 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 
 \begin{thebibliography}{20}
 \setlength{\parsep}{0pt}\setlength{\itemsep}{3pt}
+
+\bibitem{Okulov2011}
+	\by С. М. Окулов, А. В. Лялин
+	\jour Информатика и образование
+	\paper Расширенный алгоритм Евклида
+	\issue 5
+	\pages 37-41
+	\yr 2011
+
+\bibitem{Cormen2001}
+\by H. Cormen, E. Leiserson, L. Rivest, C. Stein
+\jour The MIT Press 
+\paper Introduction to Algorithms, Second Edition
+\pages 950-954
+\yr 2001
 
 \bibitem{shevchenko2017}
 \by Y. Shevchenko, A. Makarov, K. Nefedev
