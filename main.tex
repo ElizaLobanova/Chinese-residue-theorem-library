@@ -145,7 +145,7 @@ $N$, для которого для всех $i$ выполняется:
 	\label{algo:crt_decription}
 \end{algorithm}
 
-Расширенный алгоритм Евклида \ref{algo:Evclid} \cite{Okulov2011} является продолжением общего алгоритма Евклида. 
+Расширенный алгоритм Евклида \cite{Okulov2011} является продолжением общего алгоритма Евклида. 
 
 В общем алгоритме для чисел $a$ и $b$ рассчитываются частные $Q_{i-1}$ и остатки $R_i$ такие что $R_0 = a$, $R_1 = b$, $Q_{i-1} = \frac{R_{i-2}}{R_{i-1}}$ и $R_i = R_{i-2} - Q_{i-1} \cdot R_{i-1}$ до тех пор пока $R_i$ не станет равна нулю.
 
@@ -170,7 +170,7 @@ $N$, для которого для всех $i$ выполняется:
 
 \subsection{Математические операции с массивами остатков от деления на простые числа}
 
-Определим операции сложения и вычитания для полученного набора остатков от деления
+Определим операции сложения и вычитания для полученного набора остатков. Модульная арифметика \cite{omondi2007residue, soderstrand1986residue} определяет эти операции следующим образом: 
 
 \section {Реализация в виде библиотеки c++}
 
@@ -202,6 +202,21 @@ $N$, для которого для всех $i$ выполняется:
 \paper Introduction to Algorithms, Second Edition
 \pages 950-954
 \yr 2001
+
+
+\bibitem{omondi2007residue}
+\by Omondi, Amos R and Premkumar, A Benjamin
+\jour Physics Letters A
+\paper Residue number systems: theory and implementation
+\vol 2
+\yr 2007
+
+
+\bibitem{soderstrand1986residue}
+\by Soderstrand, Michael A and Jenkins, W Kenneth and Jullien, Graham A and Taylor, Fred J
+\jour Physics Letters A
+\paper Residue number system arithmetic: modern applications in digital signal processing
+\yr 1986
 
 \bibitem{shevchenko2017}
 \by Y. Shevchenko, A. Makarov, K. Nefedev
