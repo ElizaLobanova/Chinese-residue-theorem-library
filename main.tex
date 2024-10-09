@@ -134,12 +134,12 @@ $N$, для которого для всех $i$ выполняется:
 
 \begin{algorithm}[H]
 	\textbf{Ввод:} Массивы простых чисел $a[]$, и остатков $r[]$ длины $k$.\\
-	\textbf{Вывод:} Расшифрованное число.
+	\textbf{Вывод:} Расшифрованное число $x$.
 	\begin{algorithmic}
-		\STATE {Рассчитать $M = \prod\limits_{i=1}^k a_i$}
-		\STATE {Рассчитать $M_i = \frac{M}{a_i}$}
+		\STATE {$M = \prod\limits_{i=1}^k a_i$}
+		\STATE {$M_i = \frac{M}{a_i}$}
 		\STATE {Используя расширенный алгоритм Евклида \cite{Okulov2011} найти первый коэффициент Безу $^1B$ для наибольшего общего делителя от $M_i$ и $a_i$:}
-		\STATE{Рассчитать искомое число $x = \sum\limits_{i=1}^{k} r_i \cdot M_i \cdot ^1B$}
+		\STATE{$x = \sum\limits_{i=1}^{k} r_i \cdot M_i \cdot ^1B$}
 	\end{algorithmic}
 	\caption{Расшифровка числа из простых чисел и остатков от делений на них.}
 	\label{algo:crt_decription}
@@ -156,12 +156,13 @@ $N$, для которого для всех $i$ выполняется:
 	\textbf{Вывод:} Первый коэффициент Безу $^1B$.
 	\begin{algorithmic}
 		\STATE {$R_0 = a$}
-		\STATE {Рассчитать $M_i = \frac{M}{a_i}$}
+		\STATE {$R_1 = b$}
 		\WHILE {$R_i > 0$}
 			\STATE {$Q_{i-1} = \frac{R_{i-2}}{R_{i-1}}$}
 			\STATE {$R_i = R_{i-2} - Q_{i-1} \cdot R_{i-1}$}
 			\STATE {$^1B_{i+1} = ^1B_{i-1} - ^1B_{i}$}
 		\ENDWHILE {}
+		\STATE {$^1B = ^1B_{i+1}$}
 	\end{algorithmic}
 	\caption{Расширенный алгоритм Евклида}
 	\label{algo:Evclid}
@@ -171,6 +172,8 @@ $N$, для которого для всех $i$ выполняется:
 \subsection{Математические операции с массивами остатков от деления на простые числа}
 
 Определим операции сложения и вычитания для полученного набора остатков. Модульная арифметика \cite{omondi2007residue, soderstrand1986residue} определяет эти операции следующим образом: 
+
+
 
 \section {Реализация в виде библиотеки c++}
 
