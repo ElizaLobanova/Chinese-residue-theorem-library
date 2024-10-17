@@ -35,6 +35,12 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 
 \begin{thebibliography}{4}
 \setlength{\parsep}{0pt}\setlength{\itemsep}{3pt}
+\bibitem{hao2022cambricon}
+\by Hao, Yifan and Zhao, Yongwei and Liu, Chenxiao and Du, Zidong and Cheng, Shuyao and Li, Xiaqing and Hu, Xing and Guo, Qi and Xu, Zhiwei and Chen, Tianshi
+\jour 2022 55th IEEE/ACM International Symposium on Microarchitecture (MICRO)
+\paper Cambricon-P: A bitflow architecture for arbitrary precision computing
+\pages 57-72
+\yr 2022
 
 \bibitem{Okulov2011}
 \by С. М. Окулов, А. В. Лялин
@@ -50,6 +56,21 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 \paper Introduction to Algorithms, Second Edition
 \pages 950-954
 \yr 2001
+
+
+\bibitem{omondi2007residue}
+\by Omondi, Amos R and Premkumar, A Benjamin
+\jour Physics Letters A
+\paper Residue number systems: theory and implementation
+\vol 2
+\yr 2007
+
+
+\bibitem{soderstrand1986residue}
+\by Soderstrand, Michael A and Jenkins, W Kenneth and Jullien, Graham A and Taylor, Fred J
+\jour Physics Letters A
+\paper Residue number system arithmetic: modern applications in digital signal processing
+\yr 1986
 
 \bibitem{shevchenko2017}
 \by Y. Shevchenko, A. Makarov, K. Nefedev
@@ -108,7 +129,7 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 	\item Расчёт результата из массива остатков от деления на простые числа
 \end{enumerate}
 
-Основой алгоритма является Китайская теорема об остатках (КТО) \cite{Cormen2001}:
+Основой алгоритма является Китайская теорема об остатках (КТО) \cite{Okulov2011,Cormen2001}:
 
 Пусть $a = a_1 a_2 ... a_k$, где $a_i$ попарно взаимно простые натуральные числа, $r = r_1 r_2 ... r_k$ -- натуральные числа удовлетворяющие неравенству $0 \leq r_i \le a_i$. Тогда найдётся такое число
 $N$, для которого для всех $i$ выполняется:
@@ -127,6 +148,20 @@ $N$, для которого для всех $i$ выполняется:
 	\label{eq:collary}
 \end{equation}
 Для сохранения значения, например, $2^{20}$ в виде остатков можно было бы использовать два ближайших простых числа. Однако основной задачей является представление данных в формате, который оптимален для работы на конкретной архитектуре процессора. В связи с этим, для эффективного хранения следует выбирать ближайшие слева простые числа к значениям $2^{32}$ или $2^{64}$ в количестве $k$ необходимом, для соблюдения условия \ref{eq:collary} 
+
+\section{Математические операции с массивами остатков}
+
+Определим операции сложения и вычитания для полученного набора остатков. Модульная арифметика \cite{omondi2007residue, soderstrand1986residue} определяет эти операции следующим образом: если два числа $X_1$ и $X_2$ представимы в виде систем остатков $(x_{11}, x_{12}, ..., x_{1n}) $ и $(x_{21}, x_{22}, ..., x_{2n})$ на модули $(p_1, p_2, ..., p_n)$, то 
+
+\begin{align} 
+	X_3 &= X_1 + X_2 = \nonumber \\ 
+	& = ((x_{11} + x_{21})\ \mathrm{mod}\ p_1, (x_{12} + x_{22})\ \mathrm{mod}\ p_2, ..., (x_{1n} + x_{2n})\ \mathrm{mod}\ p_n), \\
+	X_4 &= X_1 - X_2 = \nonumber \\ 
+	& =((x_{11} - x_{21})\ \mathrm{mod}\ p_1, (x_{12} - x_{22})\ \mathrm{mod}\ p_2, ..., (x_{1n} - x_{2n})\ \mathrm{mod}\ p_n), \\
+	X_5 &= X_1 \cdot X_2 = \nonumber \\ 
+	& = ((x_{11} \cdot x_{21})\ \mathrm{mod}\ p_1, (x_{12} \cdot x_{22})\ \mathrm{mod}\ p_2, ..., (x_{1n} \cdot x_{2n})\ \mathrm{mod}\ p_n), 
+\end{align}
+т.е., чтобы сложить, вычесть или умножить 2 числа, достаточно сложить, вычесть или умножить соответствующие элементы векторов остатков этих двух чисел.
 
 \section{Расшифровка числа из массива остатков}
 
@@ -172,20 +207,6 @@ $N$, для которого для всех $i$ выполняется:
 \end{algorithm}
 
 В данном алгоритме для расшифровки числа необходимо вычислить произведение набора остатков на соответствующие $M_i$ и первый коэфициент Безу. Сумма данного произведения, взятая по модулю $M$, и будет равна исходному числу.
-
-\section{Математические операции с массивами остатков}
-
-Определим операции сложения и вычитания для полученного набора остатков. Модульная арифметика \cite{omondi2007residue, soderstrand1986residue} определяет эти операции следующим образом: если два числа $X_1$ и $X_2$ представимы в виде систем остатков $(x_{11}, x_{12}, ..., x_{1n}) $ и $(x_{21}, x_{22}, ..., x_{2n})$ на модули $(p_1, p_2, ..., p_n)$, то 
-
-\begin{align} 
-	X_3 &= X_1 + X_2 = \nonumber \\ 
-	    & = ((x_{11} + x_{21})\ \mathrm{mod}\ p_1, (x_{12} + x_{22})\ \mathrm{mod}\ p_2, ..., (x_{1n} + x_{2n})\ \mathrm{mod}\ p_n), \\
-	X_4 &= X_1 - X_2 = \nonumber \\ 
-		& =((x_{11} - x_{21})\ \mathrm{mod}\ p_1, (x_{12} - x_{22})\ \mathrm{mod}\ p_2, ..., (x_{1n} - x_{2n})\ \mathrm{mod}\ p_n), \\
-	X_5 &= X_1 \cdot X_2 = \nonumber \\ 
-		& = ((x_{11} \cdot x_{21})\ \mathrm{mod}\ p_1, (x_{12} \cdot x_{22})\ \mathrm{mod}\ p_2, ..., (x_{1n} \cdot x_{2n})\ \mathrm{mod}\ p_n), 
-\end{align}
-т.е., чтобы сложить, вычесть или умножить 2 числа, достаточно сложить, вычесть или умножить соответствующие элементы векторов остатков этих двух чисел. 
 
 
 \section{Заключение}
