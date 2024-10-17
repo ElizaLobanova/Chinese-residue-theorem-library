@@ -27,8 +27,9 @@
 
 Application of the Chinese residue theorem for dealing with large numbers in supercomputing\title
 
-In this paper we consider Something new and cool!
-\keywords{Metropolis algorithm, statistical thermodynamics.}
+The article explores the application of the Chinese Remainder Theorem (CRT) to optimize computations involving large numbers in supercomputing, particularly in GPU environments. The proposed method involves decomposing large numbers into remainders with respect to a set of prime numbers, which facilitates efficient arithmetic operations such as addition, subtraction, and multiplication while mitigating the risk of memory overflow. The advantage of this approach lies in its parallelization potential, which significantly enhances computational speed and reduces memory load. However, reconstructing the original number from the remainders is resource-intensive, potentially diminishing overall performance. The paper concludes that CRT is a powerful tool for parallel computing, offering solutions to memory limitations and overflow issues, although it may introduce some complexity during number reconstruction.
+
+\keywords{multi-precision arithmetic, supercomputers, modular arithmetic, parallelization}
 \org{$^1$ Institute for Applied Mathematics, Far Eastern Branch, Russian Academy of Sciences\\ 
 $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 \references{ %транслитерированный список литературы
@@ -107,9 +108,9 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 \markleft{В.\, О.~Трухин, В.\, С. Стронгин, Э.\,А.~Лобанова, ...} %добавляем, если много авторов
 
 
-\abstract Задача ис \todo{Написать абстракт}
+\abstract В работе рассматривается применение Китайской теоремы об остатке (КТО) для оптимизации вычислений с большими числами в суперкомпьютерах, в частности при использовании GPU. Предложенный метод предполагает разложение больших чисел на остатки по отношению к набору простых чисел, что способствует эффективному выполнению арифметических операций, таких как сложение, вычитание и умножение, и одновременно снижает риск переполнения памяти. Преимущество такого подхода заключается в возможности распараллеливания, что значительно повышает скорость вычислений и повышает скорость чтения/записи памяти. Однако восстановление исходного числа из остатков требует значительных ресурсов, что потенциально снижает общую производительность.
 
-\keywords{алгоритмы, статистическая термодинамика.}
+\keywords{большие числа, суперкомпьютеры, модульная арифметика, параллелизация.}
 
 \DOI{to be presented}
 
