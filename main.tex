@@ -94,7 +94,7 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 
 \section*{Введение}
 
-В ряде задач вычислительной физики данные представляются в виде чисел превышающих стандартные типы языков программирования ($\approx 2^{64}$). Традиционно эту проблема решается представлением чисел в виде строки произвольной длины (GNU Multi-Precision Library, Boost и др.). Однако такой подход замедляет расчёты, и не работает с графическими процессорами из-за их архитектуры.
+В ряде задач теоретической физики \cite{hao2022cambricon} данные представляются в виде чисел превышающих стандартные типы языков программирования ($\approx 2^{64}$). Традиционно эту проблема решается представлением чисел в виде строки произвольной длины (GNU Multi-Precision Library, Boost и др.). Однако такой подход замедляет расчёты, и не работает с графическими процессорами из-за их архитектуры.
 
 В статье представлен алгоритм разложения больших чисел на остатки от деления на набор простых чисел, математические операции над полученными массивами и способ обратной сборки.
 
@@ -204,13 +204,21 @@ $N$, для которого для всех $i$ выполняется:
 \begin{thebibliography}{20}
 \setlength{\parsep}{0pt}\setlength{\itemsep}{3pt}
 
+
+\bibitem{hao2022cambricon}
+\by Hao, Yifan and Zhao, Yongwei and Liu, Chenxiao and Du, Zidong and Cheng, Shuyao and Li, Xiaqing and Hu, Xing and Guo, Qi and Xu, Zhiwei and Chen, Tianshi
+\jour 2022 55th IEEE/ACM International Symposium on Microarchitecture (MICRO)
+\paper Cambricon-P: A bitflow architecture for arbitrary precision computing
+\pages 57-72
+\yr 2022
+
 \bibitem{Okulov2011}
-	\by С. М. Окулов, А. В. Лялин
-	\jour Информатика и образование
-	\paper Расширенный алгоритм Евклида
-	\issue 5
-	\pages 37-41
-	\yr 2011
+\by С. М. Окулов, А. В. Лялин
+\jour Информатика и образование
+\paper Расширенный алгоритм Евклида
+\issue 5
+\pages 37-41
+\yr 2011
 
 \bibitem{Cormen2001}
 \by H. Cormen, E. Leiserson, L. Rivest, C. Stein
@@ -233,13 +241,6 @@ $N$, для которого для всех $i$ выполняется:
 \jour Physics Letters A
 \paper Residue number system arithmetic: modern applications in digital signal processing
 \yr 1986
-
-\bibitem{hao2022cambricon}
-\by Hao, Yifan and Zhao, Yongwei and Liu, Chenxiao and Du, Zidong and Cheng, Shuyao and Li, Xiaqing and Hu, Xing and Guo, Qi and Xu, Zhiwei and Chen, Tianshi
-\jour 2022 55th IEEE/ACM International Symposium on Microarchitecture (MICRO)
-\paper Cambricon-P: A bitflow architecture for arbitrary precision computing
-\pages 57-72
-\yr 2022
 
 \bibitem{shevchenko2017}
 \by Y. Shevchenko, A. Makarov, K. Nefedev
