@@ -165,7 +165,7 @@ $N$, для которого для всех $i$ выполняется:
 		\STATE {Рассчитать $M = \prod\limits_{i=1}^k a_i$}
 		\STATE {Рассчитать $M_i = \frac{M}{a_i}$}
 		\STATE {Используя расширенный алгоритм Евклида \cite{Okulov2011} найти первый коэффициент Безу $^1B$ для наибольшего общего делителя от $M_i$ и $a_i$:}
-		\STATE{Рассчитать искомое число $x = \sum\limits_{i=1}^{k} r_i \cdot M_i \cdot ^1B$}
+		\STATE {Рассчитать искомое число $x = (\sum\limits_{i=1}^{k} r_i \cdot M_i \cdot ^1B)\mod M$}
 	\end{algorithmic}
 	\caption{Расшифровка числа из простых чисел и остатков от делений на них.}
 	\label{algo:crt_decription}
