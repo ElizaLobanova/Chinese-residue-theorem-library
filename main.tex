@@ -22,46 +22,6 @@ The study explores the application of the Chinese Remainder Theorem (CRT) to opt
 $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 \references{ %транслитерированный список литературы
 
-\begin{thebibliography}{4}
-\setlength{\parsep}{0pt}\setlength{\itemsep}{3pt}
-\bibitem{hao2022cambricon}
-\by Hao, Yifan and Zhao, Yongwei and Liu, Chenxiao and Du, Zidong and Cheng, Shuyao and Li, Xiaqing and Hu, Xing and Guo, Qi and Xu, Zhiwei and Chen, Tianshi
-\jour 2022 55th IEEE/ACM International Symposium on Microarchitecture (MICRO)
-\paper Cambricon-P: A bitflow architecture for arbitrary precision computing
-\pages 57-72
-\yr 2022
-
-\bibitem{Okulov2011}
-\by С. М. Окулов, А. В. Лялин
-\jour Информатика и образование
-\paper Расширенный алгоритм Евклида
-\issue 5
-\pages 37-41
-\yr 2011
-
-\bibitem{Cormen2001}
-\by H. Cormen, E. Leiserson, L. Rivest, C. Stein
-\jour The MIT Press 
-\paper Introduction to Algorithms, Second Edition
-\pages 950-954
-\yr 2001
-
-
-\bibitem{omondi2007residue}
-\by Omondi, Amos R and Premkumar, A Benjamin
-\jour Physics Letters A
-\paper Residue number systems: theory and implementation
-\vol 2
-\yr 2007
-
-
-\bibitem{soderstrand1986residue}
-\by Soderstrand, Michael A and Jenkins, W Kenneth and Jullien, Graham A and Taylor, Fred J
-\jour Physics Letters A
-\paper Residue number system arithmetic: modern applications in digital signal processing
-\yr 1986
-
-\end{thebibliography}
 }
 
 \UDC{519.17+519.11+519.684+519.683}
@@ -71,7 +31,7 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 
 \submitted{ октября 2024 г.}
 
-\title{Применение китайской теоремы об остатках для работы с большими числами в суперкомпьютерных вычислениях}
+\title{Применение китайской теоремы об остатках для работы с длинной арифметикой}
 
 \author[1,2]{В.\, О.~Трухин}{Департамент теоретической физики и интеллектуальных технологий, Институт наукоемких технологий и передовых материалов, Дальневосточный федеральный университет. 690922, Россия, г. Владивосток, о. Русский, п. Аякс, 10}{trukhin.vo@dvfu.ru}
 \author[1,2]{В.\, С.~Стронгин}{Институт прикладной математики, Дальневосточное отделение Российской академии наук. 690041, Россия, г. Владивосток, Ул. Радио д. 7}{}
@@ -87,7 +47,7 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 \markleft{В.\, О.~Трухин, В.\, С. Стронгин, Э.\,А.~Лобанова, ...} %добавляем, если много авторов
 
 
-\abstract В работе рассматривается применение Китайской теоремы об остатках (КТО) для оптимизации вычислений с большими числами в суперкомпьютерах, в частности при использовании графических процессоров. Предложенный метод предполагает разложение больших чисел на остатки по отношению к набору простых чисел, что способствует эффективному выполнению арифметических операций, таких как сложение, вычитание и умножение, и одновременно снижает риск переполнения памяти. Преимущество такого подхода заключается в возможности применения параллельных вычислений, что значительно повышает скорость вычислений и повышает скорость чтения/записи памяти. Однако восстановление исходного числа из остатков требует значительных ресурсов, что потенциально снижает общую производительность.
+\abstract В работе рассматривается применение Китайской теоремы об остатках (КТО) для оптимизации вычислений с большими числами в суперкомпьютерах, в частности при использовании графических процессоров. Предложенный метод предполагает разложение больших чисел на остатки по отношению к набору простых чисел, что способствует эффективному выполнению арифметических операций, таких как сложение, вычитание и умножение, и одновременно снижает риск переполнения памяти. Преимущество такого подхода заключается в возможности применения параллельных вычислений, что значительно повышает скорость вычислений и повышает скорость чтения/записи памяти.
 
 \keywords{большие числа, суперкомпьютеры, модульная арифметика, параллельные вычисления.}
 
@@ -95,11 +55,11 @@ $^2$ Department of theoretical physics, Far eastern federal university, Russia}
 
 \section*{Введение}
 
-В ряде задач теоретической физики \cite{hao2022cambricon} данные представляются в виде чисел превышающих стандартные типы языков программирования ($\approx 2^{64}$). Традиционно эту проблема решается представлением чисел в виде строки произвольной длины. Однако такой подход замедляет расчёты, и не работает с графическими процессорами из-за их архитектуры.
+В ряде задач теоретической физики \cite{hao2022cambricon, makarova2023canonical, trukhin2024thermodynamic, trukhin2025low} данные представляются в виде чисел превышающих стандартные типы языков программирования ($\approx 2^{64}$). Традиционно эту проблема решается представлением чисел в виде строки произвольной длины. Однако такой подход замедляет расчёты, и не работает с графическими процессорами из-за их архитектуры.
 
 В статье представлен алгоритм разложения больших чисел на остатки от деления на набор простых чисел, математические операции над полученными массивами и способ обратной сборки.
 
-\section{Алгоритм работы с большими числами} 
+\section{Алгоритм работы с длинной арифметикой} 
 
 Принцип работы алгоритма можно разбить на три этапа: 
 
@@ -211,13 +171,33 @@ $N$, для которого для всех $i$ выполняется:
 \begin{thebibliography}{20}
 \setlength{\parsep}{0pt}\setlength{\itemsep}{3pt}
 
-
 \bibitem{hao2022cambricon}
 \by Hao, Yifan and Zhao, Yongwei and Liu, Chenxiao and Du, Zidong and Cheng, Shuyao and Li, Xiaqing and Hu, Xing and Guo, Qi and Xu, Zhiwei and Chen, Tianshi
 \jour 2022 55th IEEE/ACM International Symposium on Microarchitecture (MICRO)
 \paper Cambricon-P: A bitflow architecture for arbitrary precision computing
 \pages 57-72
 \yr 2022
+
+\bibitem{makarova2023canonical}
+\by Makarova, Kseniia and Makarov, Aleksandr and Strongin, Vladislav and Titovets, Iuliia and Shevchenko, Yuriy and Kapitan, Vitalii and Rybin, Alexey and Kapitan, Dmitrii and Korol, Alena and Vasiliev, Egor and others
+\jour Journal of Computational and Applied Mathematics
+\paper Canonical Monte Carlo multispin cluster method
+\pages 115153
+\yr 2023
+
+\bibitem{trukhin2024thermodynamic}
+\by Trukhin, Viacheslav Olegovich and Strongin, Vladislav Sergeevich and Chesnokov, Mikhail Alexeyevich and Makarov, Aleksandr Gennadievich and Lobanova, Eliza Alexandrovna and Shevchenko, Yuriy Andreevich and Nefedev, Konstantin Valentinovich
+\jour Physica A: Statistical Mechanics and its Applications
+\paper Thermodynamic equilibrium of$\pm$J Ising model on square lattice
+\pages 130172
+\yr 2024
+
+\bibitem{trukhin2025low}
+\by Trukhin, VO and Prokhorov, EI and Makarov, AG and Nefedev, KV
+\jour Physica A: Statistical Mechanics and its Applications
+\paper Low-temperature states of the Ising$\pm$J model on a square lattice
+\pages 130729
+\yr 2025
 
 \bibitem{Okulov2011}
 \by С. М. Окулов, А. В. Лялин
@@ -259,7 +239,6 @@ $N$, для которого для всех $i$ выполняется:
 
 \end{thebibliography}
 
-
-
 \EndArticle
+
 \end{document} 
