@@ -15,13 +15,13 @@
 
 Application of the Chinese residue theorem for dealing with multi-precision numbers in supercomputing\title
 
-The study explores the application of the Chinese Remainder Theorem (CRT) to optimize large-number computations in supercomputing, particularly when employing graphics processing units (GPUs). The proposed method decomposes large numbers into residues with respect to a set of prime moduli, enabling efficient execution of arithmetic operations such as addition, subtraction, and multiplication while simultaneously reducing the risk of memory overflow. The main advantage of this approach lies in its suitability for parallel computation, which substantially increases computational speed and improves memory read/write performance. However, reconstructing the original number from its residues requires considerable computational resources, which may potentially diminish overall performance.
+The present study examines the application of the Chinese Remainder Theorem (CRT) to optimize large-integer computations in supercomputing environments, particularly when employing graphics processing units (GPUs). The proposed method involves decomposing large numbers into residues with respect to a set of prime moduli, thereby enabling efficient execution of arithmetic operations such as addition, subtraction, and multiplication, while simultaneously reducing the risk of memory overflow. A key advantage of this approach lies in its suitability for parallel computation, which substantially increases computational throughput and improves memory read/write performance.
 
 \keywords{multi-precision arithmetic, supercomputers, modular arithmetic, parallel computing.}
 \org{$^1$ Institute for Applied Mathematics, Far Eastern Branch, Russian Academy of Sciences\\ 
 $^2$ Department of theoretical physics, Far eastern federal university, Russia}
-\references{ %транслитерированный список литературы
-
+\references{ 
+	%транслитерированный список литературы
 }
 
 \UDC{519.17+519.11+519.684+519.683}
@@ -97,12 +97,9 @@ $N$, для которого для всех $i$ выполняется:
 Модульная арифметика \cite{omondi2007residue, soderstrand1986residue} определяет операции сложения, вычитания и умножения следующим образом: если два числа $X_1$ и $X_2$ представимы в виде систем остатков $(r_{11}, r_{12}, ..., r_{1n}) $ и $(r_{21}, r_{22}, ..., r_{2n})$ на модули $(a_1, a_2, ..., a_n)$
 
 \begin{align} 
-	X_3 &= X_1 + X_2 = \nonumber \\ 
-	& = ((r_{11} + r_{21})\ \mathrm{mod}\ a_1, (r_{12} + r_{22})\ \mathrm{mod}\ a_2, ..., (r_{1n} + r_{2n})\ \mathrm{mod}\ a_n), \\
-	X_4 &= X_1 - X_2 = \nonumber \\ 
-	& =((r_{11} - r_{21})\ \mathrm{mod}\ a_1, (r_{12} - r_{22})\ \mathrm{mod}\ a_2, ..., (r_{1n} - r_{2n})\ \mathrm{mod}\ a_n), \\
-	X_5 &= X_1 \cdot X_2 = \nonumber \\ 
-	& = ((r_{11} \cdot r_{21})\ \mathrm{mod}\ a_1, (r_{12} \cdot r_{22})\ \mathrm{mod}\ a_2, ..., (r_{1n} \cdot r_{2n})\ \mathrm{mod}\ a_n), 
+	X_1 + X_2  = ((r_{11} + r_{21})\ \mathrm{mod}\ a_1, (r_{12} + r_{22})\ \mathrm{mod}\ a_2, ..., (r_{1n} + r_{2n})\ \mathrm{mod}\ a_n), \\
+	X_1 - X_2 = ((r_{11} - r_{21})\ \mathrm{mod}\ a_1, (r_{12} - r_{22})\ \mathrm{mod}\ a_2, ..., (r_{1n} - r_{2n})\ \mathrm{mod}\ a_n), \\
+	X_1 \cdot X_2 = ((r_{11} \cdot r_{21})\ \mathrm{mod}\ a_1, (r_{12} \cdot r_{22})\ \mathrm{mod}\ a_2, ..., (r_{1n} \cdot r_{2n})\ \mathrm{mod}\ a_n), 
 \end{align}
 т.е., чтобы сложить, вычесть или умножить 2 числа, достаточно сложить, вычесть или умножить соответствующие элементы векторов остатков этих двух чисел.
 
