@@ -2,6 +2,7 @@
 \usepackage{femj_ru}
 \usepackage{algorithm}
 \usepackage{algorithmic}
+\usepackage{subcaption}
 
 \begin{document}
 \newcommand{\todo}[1]{\textbf{#1}}
@@ -153,10 +154,12 @@ $N$, для которого для всех $i$ выполняется:
 
 На рисунке \ref{fig:timeTest} представлена производительность операции сложения на одном потоке.
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.7\linewidth]{images/time.pdf}
-	\caption{Производительность операции сложения на одном потоке.}
+\begin{figure}[h]\centering
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/time_sequential18.pdf}
+    \hfill
+    \includegraphics[width=0.48\textwidth]{images/time_parallel18.pdf}
+	\caption{Производительность операции сложения на одном потоке (слева) и при параллельном вычислении (справа).}
 	\label{fig:timeTest}
 \end{figure}
 
