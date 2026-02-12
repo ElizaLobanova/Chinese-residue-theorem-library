@@ -1,0 +1,264 @@
+\documentclass[10pt]{article}
+\usepackage{femj_ru}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{subcaption}
+
+\begin{document}
+\newcommand{\todo}[1]{\textbf{#1}}
+
+
+\Pages(0--0)
+
+\def\Im{\mathop{\mathrm{Im}}\nolimits}
+
+\summary Trukhin~V.\,O.$^{1, 2}$\!, Strongin~V.\,S.$^{1, 2}$\!, Lobanova~E.\,A.$^{1, 2}$\, Makarov~A.\,G.$^{1, 2}$\!, Nefedev~K.\,V.$^{1, 2}$\author
+
+Application of the Chinese residue theorem for dealing with multi-precision numbers in supercomputing\title
+
+The present study examines the application of the Chinese Remainder Theorem (CRT) to optimize large-integer computations in supercomputing environments, particularly when employing graphics processing units (GPUs). The proposed method involves decomposing large numbers into residues with respect to a set of prime moduli, thereby enabling efficient execution of arithmetic operations such as addition, subtraction, and multiplication, while simultaneously reducing the risk of memory overflow. A key advantage of this approach lies in its suitability for parallel computation, which substantially increases computational throughput and improves memory read/write performance.
+
+\keywords{multi-precision arithmetic, supercomputers, modular arithmetic, parallel computing.}
+\org{$^1$ Institute for Applied Mathematics, Far Eastern Branch, Russian Academy of Sciences\\ 
+$^2$ Department of theoretical physics, Far eastern federal university, Russia}
+\references{ 
+	%транслитерированный список литературы
+}
+
+\UDC{519.17+519.11+519.684+519.683}
+\AMS{68R10 + 82B30 + 65Y05}
+
+\SupportedBy{Исследование выполнено за счет гранта Российского научного фонда № 24-71-10069, \linebreak https://rscf.ru/project/24-71-10069/ \linebreak}
+
+\submitted{ октября 2024 г.}
+
+\title{Применение китайской теоремы об остатках для работы с длинной арифметикой}
+
+\author[1,2]{В.\, О.~Трухин}{Департамент теоретической физики и интеллектуальных технологий, Институт наукоемких технологий и передовых материалов, Дальневосточный федеральный университет. 690922, Россия, г. Владивосток, о. Русский, п. Аякс, 10}{trukhin.vo@dvfu.ru}
+\author[1,2]{В.\, С.~Стронгин}{Институт прикладной математики, Дальневосточное отделение Российской академии наук. 690041, Россия, г. Владивосток, Ул. Радио д. 7}{}
+\author[1,2]{Э.\, А.~Лобанова}{}{}
+\author[1,2]{A.\, Г.~Макаров}{}{}
+\author[1,2]{К.\, В.~Нефедев}{}{}
+
+
+
+
+\makeface
+
+%\markright {Разбавленная модель кубического спинового льда ...} %Добавляем, если длинное название статьи
+\markleft{В.\, О.~Трухин, В.\, С. Стронгин, Э.\,А.~Лобанова, ...} %добавляем, если много авторов
+
+
+\abstract В работе рассматривается применение Китайской теоремы об остатках (КТО) для оптимизации вычислений с большими числами в суперкомпьютерах, в частности при использовании графических процессоров. Предложенный метод предполагает разложение больших чисел на остатки по отношению к набору простых чисел, что способствует эффективному выполнению арифметических операций, таких как сложение, вычитание и умножение, и одновременно снижает риск переполнения памяти. Преимущество такого подхода заключается в возможности применения параллельных вычислений, что значительно повышает скорость вычислений и повышает скорость чтения/записи памяти.
+
+\keywords{большие числа, суперкомпьютеры, модульная арифметика, параллельные вычисления.}
+
+\DOI{to be presented}
+
+\section*{Введение}
+
+В ряде задач теоретической физики \cite{hao2022cambricon, makarova2023canonical, trukhin2024thermodynamic, trukhin2025low} данные представляются в виде чисел превышающих стандартные типы языков программирования ($\approx 2^{64}$). Традиционно эту проблема решается представлением чисел в виде строки произвольной длины. Однако такой подход замедляет расчёты, и не работает с графическими процессорами из-за их архитектуры.
+
+В статье представлен алгоритм разложения больших чисел на остатки от деления на набор простых чисел, математические операции над полученными массивами и способ обратной сборки.
+
+\section{Алгоритм работы с длинной арифметикой} 
+
+Принцип работы алгоритма можно разбить на три этапа: 
+
+\begin{enumerate}
+	\item Разбиение большого числа на составные части (набор остатков)
+	\item Математические операции с массивами остатков от деления на простые числа
+	\item Расчёт результата из массива остатков от деления на простые числа
+\end{enumerate}
+
+Основой алгоритма является Китайская теорема об остатках (КТО) \cite{Okulov2011,Cormen2001}:
+
+Пусть $a = a_1 a_2 ... a_k$, где $a_i$ попарно взаимно простые натуральные числа, $r = r_1 r_2 ... r_k$ -- натуральные числа удовлетворяющие неравенству $0 \leq r_i \le a_i$. Тогда найдётся такое число
+$N$, для которого для всех $i$ выполняется:
+
+\begin{equation}
+	r_i=N \mod a_i
+	\label{eq:rem_th}
+\end{equation}
+
+Из теоремы следует что, для того чтобы разложить число X на остатки $r_i$ необходимо найти остаток от деления на некоторый набор простых чисел $a_i$. Этот набор простых чисел определяет максимальное число $M$, которое мы сможем хранить с использованием КТО. Число $M$ задается следующей формулой:
+
+\begin{equation}
+	M = \prod\limits_{i=1}^k a_i, ~~~ M \geqslant X
+	\label{eq:corollary}
+\end{equation}
+
+Существует несколько подходов к выбору простых чисел для разбиения. 
+
+Первый подход состоит в выборе минимального количества простых чисел, произведение которых превосходит $M$, и который помещаются в максимальный целочисленный тип данных, предоставляемый системой ($2^{32}$ или $2^{64}$). 
+
+Второй подход предлагает использовать множество простых чисел, которые бы помещались в наиболее производительный тип данных. Для графических процессоров (GPU) таким является \textbf{int8}. Несмотря на то, что для второго подхода необходимо производить больше операций за счёт большего количества чисел $a$, применение параллельных вычислений на GPU этот подход даст больший прирост производительности, из-за особенности графических мультипроцессоров.
+
+\section{Математические операции с массивами остатков}
+
+Модульная арифметика \cite{omondi2007residue, soderstrand1986residue} определяет операции сложения, вычитания и умножения следующим образом: если два числа $X_1$ и $X_2$ представимы в виде систем остатков $(r_{11}, r_{12}, ..., r_{1n}) $ и $(r_{21}, r_{22}, ..., r_{2n})$ на модули $(a_1, a_2, ..., a_n)$
+
+\begin{align} 
+	X_1 + X_2  = ((r_{11} + r_{21})\ \mathrm{mod}\ a_1, (r_{12} + r_{22})\ \mathrm{mod}\ a_2, ..., (r_{1n} + r_{2n})\ \mathrm{mod}\ a_n), \\
+	X_1 - X_2 = ((r_{11} - r_{21})\ \mathrm{mod}\ a_1, (r_{12} - r_{22})\ \mathrm{mod}\ a_2, ..., (r_{1n} - r_{2n})\ \mathrm{mod}\ a_n), \\
+	X_1 \cdot X_2 = ((r_{11} \cdot r_{21})\ \mathrm{mod}\ a_1, (r_{12} \cdot r_{22})\ \mathrm{mod}\ a_2, ..., (r_{1n} \cdot r_{2n})\ \mathrm{mod}\ a_n), 
+\end{align}
+т.е., чтобы сложить, вычесть или умножить 2 числа, достаточно сложить, вычесть или умножить соответствующие элементы векторов остатков этих двух чисел.
+
+В следствии того что: $r_i \in (N \cup 0) $, операция деления не определена для модульной арифметики в явном виде.
+
+\section{Восстановление числа из массива остатков}
+
+Для расшифровки нужно найти модульно обратное $M_i^{-1}\equiv\frac{1}{M_i}\mod a_i$. Для поиска $M_i^{-1}$ используется расширенный алгоритм Евклида.
+Расширенный алгоритм Евклида \cite{Okulov2011} является продолжением общего алгоритма Евклида. 
+
+В общем алгоритме для чисел $a$ и $b$ рассчитываются частные $Q_{i-1}$ и остатки $R_i$ такие что $R_0 = a$, $R_1 = b$, $Q_{i-1} = \frac{R_{i-2}}{R_{i-1}}$ и $R_i = R_{i-2} - Q_{i-1} \cdot R_{i-1}$ до тех пор пока $R_i$ не станет равна нулю.
+
+В расширенном алгоритме Евклида добавляются коэффициенты Безу $^1B_{i+1} = ^1B_{i-1} - ^1B_{i}$ и $^2B_{i+1} = ^2B_{i-1} - ^2B_{i}$. Первый коэффициент является модульно обратным для $M_i$ и $a$. Для поиска первого коэффициента был использован алгоритм  \ref{algo:Evclid}.
+
+
+\begin{algorithm}[H]
+	\textbf{Ввод:} Два натуральных числа $a$ и $b$.\\
+	\textbf{Вывод:} Первый коэффициент Безу $^1B$.
+	\begin{algorithmic}
+		\STATE {$R_0 = a$}
+		\STATE {$R_1 = b$}
+		\WHILE {$R_i > 0$}
+			\STATE {$Q_{i-1} = \frac{R_{i-2}}{R_{i-1}}$}
+			\STATE {$R_i = R_{i-2} - Q_{i-1} \cdot R_{i-1}$}
+			\STATE {$^1B_{i+1} = ^1B_{i-1} - ^1B_{i}$}
+		\ENDWHILE {}
+		\STATE {$^1B = ^1B_{i+1}$}
+	\end{algorithmic}
+	\caption{Расширенный алгоритм Евклида}
+	\label{algo:Evclid}
+\end{algorithm}
+
+Таким образом, для того чтобы расшифровать число обратно используется алгоритм \ref{algo:crt_decription}:
+
+\begin{algorithm}[H]
+	\textbf{Ввод:} Массивы простых чисел $a[~]$, и остатков $r[~]$ длины $k$.\\
+	\textbf{Вывод:} Расшифрованное число.
+	\begin{algorithmic}
+		\STATE {Рассчитать $M = \prod\limits_{i=1}^k a_i$}
+		\STATE {Рассчитать $M_i = \frac{M}{a_i}$}
+		\STATE {Используя расширенный алгоритм Евклида \cite{Okulov2011} найти первый коэффициент Безу $^1B$ для наибольшего общего делителя от $M_i$ и $a_i$:}
+		\STATE {Рассчитать искомое число $x = (\sum\limits_{i=1}^{k} r_i \cdot M_i \cdot ^1B)\mod M$}
+	\end{algorithmic}
+	\caption{Восстановление числа из простых чисел и остатков от делений на них.}
+	\label{algo:crt_decription}
+\end{algorithm}
+
+В алгоритме \ref{algo:crt_decription} для восстановления числа необходимо вычислить произведение набора остатков на соответствующие $M_i$ и первый коэффициент Безу. Сумма данного произведения, взятая по модулю $M$, и будет равна исходному числу.
+
+\section{Производительность}
+
+На рисунке \ref{fig:timeTest} показана производительность операции сложения массивов чисел фиксированной разрядности порядка $2^{100}$. По оси абсцисс отложена длина массива (число обрабатываемых элементов), по оси ординат — производительность, выраженная в числе операций сложения в секунду, представленная в логарифмическом масштабе.
+
+\begin{figure}[h]\centering
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/time_sequential18.pdf}
+    \hfill
+    \includegraphics[width=0.48\textwidth]{images/time_parallel18.pdf}
+	\caption{Производительность операции сложения на одном потоке (слева) и при параллельном вычислении (справа).}
+	\label{fig:timeTest}
+\end{figure}
+
+Левый график соответствует последовательному (однопоточному) режиму выполнения. Видно, что в этом случае предложенный метод на основе китайской теоремы об остатках не демонстрирует преимущества по сравнению с классической длинной арифметикой, реализованной в библиотеке GMP. Это объясняется тем, что при отсутствии параллелизма затраты на запуск ядра GPU компенсируют преимущество использования более простых модульных операций.
+
+Правый график иллюстрирует результаты при параллельном выполнении вычислений. В этом режиме метод КТО демонстрирует кратное преимущество, которое возрастает с увеличением длины массива. Для больших объёмов данных производительность предложенного подхода превышает показатели реализации на базе GMP более чем в 100 раз. Такой рост производительности обусловлен независимостью вычислений как по элементам массива, так и по модулям, что позволяет эффективно задействовать вычислительные ресурсы GPU.
+
+\section{Заключение}
+
+Предлагаемый подход обладает рядом преимуществ, которые делают его эффективным для использования в вычислениях на GPU. 
+
+Во-первых, независимые параллельные вычисления с использованием алгоритма КТО достигаются за счёт работы с отдельными остатками. Это существенно ускоряет обработку массивов остатков на разных потоках или ядрах GPU в переборном алгоритме декомпозиции \cite{trukhin2025alg}.
+
+Вторым важным аспектом является решение проблемы переполнения.
+
+Кроме того, использование КТО способствует оптимизации доступа к памяти GPU. Применение модульной арифметики позволяет размещать данные в оптимальном для архитектуры GPU формате, что улучшает производительность ввода-вывода и снижает задержки доступа к памяти.
+
+Несмотря на преимущества, подход с использованием КТО имеет ряд недостатков. Восстановление исходного числа после операций требует значительных ресурсов и может замедлить работу из-за синхронизации на GPU. Алгоритм с использованием КТО является избыточным при работе с числами, сопоставимым с простыми числами, используемыми для кодировки.
+
+Таким образом, алгоритм с использованием КТО является мощным инструментом для работы с многоразрядными числами на GPU. Его применение позволяет эффективно реализовывать параллелизм, избежать переполнения и оптимизировать использование памяти. В задачах, требующих высокопроизводительных вычислений, таких как алгоритмы полного перебора и численные расчеты, КТО может существенно ускорить процесс обработки данных и повысить производительность системы.
+%\vspace{15mm}
+
+\section*{Благодарности}
+
+Исследование выполнено за счет гранта Российского научного фонда № 24-71-10069
+https://rscf.ru/project/24-71-10069/
+
+\begin{thebibliography}{20}
+\setlength{\parsep}{0pt}\setlength{\itemsep}{3pt}
+
+\bibitem{hao2022cambricon}
+\by Hao, Yifan and Zhao, Yongwei and Liu, Chenxiao and Du, Zidong and Cheng, Shuyao and Li, Xiaqing and Hu, Xing and Guo, Qi and Xu, Zhiwei and Chen, Tianshi
+\jour 2022 55th IEEE/ACM International Symposium on Microarchitecture (MICRO)
+\paper Cambricon-P: A bitflow architecture for arbitrary precision computing
+\pages 57-72
+\yr 2022
+
+\bibitem{makarova2023canonical}
+\by Makarova, Kseniia and Makarov, Aleksandr and Strongin, Vladislav and Titovets, Iuliia and Shevchenko, Yuriy and Kapitan, Vitalii and Rybin, Alexey and Kapitan, Dmitrii and Korol, Alena and Vasiliev, Egor and others
+\jour Journal of Computational and Applied Mathematics
+\paper Canonical Monte Carlo multispin cluster method
+\pages 115153
+\yr 2023
+
+\bibitem{trukhin2024thermodynamic}
+\by Trukhin, Viacheslav Olegovich and Strongin, Vladislav Sergeevich and Chesnokov, Mikhail Alexeyevich and Makarov, Aleksandr Gennadievich and Lobanova, Eliza Alexandrovna and Shevchenko, Yuriy Andreevich and Nefedev, Konstantin Valentinovich
+\jour Physica A: Statistical Mechanics and its Applications
+\paper Thermodynamic equilibrium of$\pm$J Ising model on square lattice
+\pages 130172
+\yr 2024
+
+\bibitem{trukhin2025low}
+\by Trukhin, VO and Prokhorov, EI and Makarov, AG and Nefedev, KV
+\jour Physica A: Statistical Mechanics and its Applications
+\paper Low-temperature states of the Ising$\pm$J model on a square lattice
+\pages 130729
+\yr 2025
+
+\bibitem{Okulov2011}
+\by С. М. Окулов, А. В. Лялин
+\jour Информатика и образование
+\paper Расширенный алгоритм Евклида
+\issue 5
+\pages 37-41
+\yr 2011
+
+\bibitem{Cormen2001}
+\by H. Cormen, E. Leiserson, L. Rivest, C. Stein
+\jour The MIT Press 
+\paper Introduction to Algorithms, Second Edition
+\pages 950-954
+\yr 2001
+
+
+\bibitem{omondi2007residue}
+\by Omondi, Amos R and Premkumar, A Benjamin
+\jour Physics Letters A
+\paper Residue number systems: theory and implementation
+\vol 2
+\yr 2007
+
+
+\bibitem{soderstrand1986residue}
+\by Soderstrand, Michael A and Jenkins, W Kenneth and Jullien, Graham A and Taylor, Fred J
+\jour Physics Letters A
+\paper Residue number system arithmetic: modern applications in digital signal processing
+\yr 1986
+
+\bibitem{trukhin2025alg}
+\by В. О. Трухин и др.
+\jour Дальневосточный математический журнал
+\paper Переборный алгоритм декомпозиции для решения модели Изинга
+\vol 25
+\yr 2025
+
+
+\end{thebibliography}
+
+% \EndArticle
+
+\end{document} 
